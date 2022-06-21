@@ -1,22 +1,50 @@
 from sys import getsizeof
 import numpy as np
 import matplotlib.pyplot as plt
+np.set_printoptions(precision=3, suppress=False)
 
-s1 = np.array([20,10,30]) #array de 3
-s  = np.tile(s1,3)        #replica un array n veces
-s=[np.sin(2*np.pi*3*t*1/30) for t in range(20)]
+#a list
+listA=[1,2,3]
+print(listA,type(listA))
 
-#linspace asegura la cantidad de valores
-t = np.linspace (0 ,len(s) ,len(s))
-print(len(t) ,t ,getsizeof(t))
+#append con listas
+listA.append(4)
 
-plt.plot(t,s,'ro-')
-plt.show()
+listB=[3,2,1]
+listC=listA+listB #concatena listas
+print(listC)
 
-exit()
+#pythonic way to fill a list
+listD=[np.sin(2*np.pi*3*t*1/30) for t in range(20)]
+print(listD)
 
 #numpy arrays
-s=[np.sin(2*np.pi*3*t*1/20) for t in range(100)]
+arrA = np.array([20,10,30]) #array de 3
+print(arrA,type(arrA),type(arrA[0]))
+
+arrA8 = np.array([20,10,30]).astype(np.uint8) #array de 3
+
+#concatenacion con numpy
+arrB  = np.tile(arrA,3)        #replica un array n veces
+print(arrB)
+
+#append con numpy
+arrC=np.append(arrB,arrB)
+print(arrC,len(arrC))
+
+#bases de tiempo
+#--------------------
+#arange asegura el paso
+t=np.arange(0,len(listD),1) #base de tiempo de 0 a 3 (no inclusive) en pasos de 1
+print(len(t),t,getsizeof(t))
+
+#linspace asegura la cantidad de valores
+t = np.linspace (0 ,len(listD) ,len(listD))
+print(len(t) ,t ,getsizeof(t))
+
+#grafico con matplotlib
+plt.plot(t,listD,'ro-')
+plt.show()
 
 #generators
 t=(i**2 for i in range(9))
@@ -35,10 +63,4 @@ s=np.array([next(a) for i in range(9)])
 #generators in line
 a=(np.sin(2*np.pi*3*t*1/20) for t in range(100))
 s=np.array([next(a) for i in range(100)])
-
-#base de tiempo
-#--------------------
-#arange asegura el paso
-t=np.arange(0,len(s),1) #base de tiempo de 0 a 3 (no inclusive) en pasos de 1
-print(len(t),t,getsizeof(t))
 

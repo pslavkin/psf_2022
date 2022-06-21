@@ -8,6 +8,7 @@ np.set_printoptions(precision=3, suppress=False)
 fsC       = 100 # frec de sampleo que imita el 'continuo' cuando mas mejor
 fsD       = 10   # frec de sampleo discreta. Como el ejemplo es para una senial de 1hz, segun shanon no se podria recuperar si fsD es menor o igual a 2
 sigFrec   = 1
+#sigFrec   = 11 #aliasing
 sigFrecHi = 10
 N         = 200
 
@@ -35,6 +36,7 @@ fftAxe.grid              ( True       )
 fftAxe.set_ylim          ( 0 ,0.25 )
 fftLn, = plt.plot        ( [],[],'b-',linewidth=4 )
 
+print((fsC/N )*fsC/2*t)
 
 def signal(n):
     return np.sin(2*np.pi*n*sigFrec)
@@ -63,10 +65,11 @@ def update(n):
     fftAxe.set_ylim ( 0 ,np.max(fft)+0.01)
     fftAxe.set_xlim ( 0 ,fsC/2 )
     fftLn.set_data ( (fsC/N )*fsC*t ,fft)
+    
     return sigLn1, sigLn2, sigLn3, fftLn
 
 
-ani=FuncAnimation(fig,update,N,init_func=init,blit=True,interval=10,repeat=False)
+ani=FuncAnimation(fig,update,N,init_func=init,blit=False,interval=10,repeat=False)
 #mng=plt.get_current_fig_manager()
 #mng.resize(mng.window.maxsize())
 plt.get_current_fig_manager().window.showMaximized() #para QT5
