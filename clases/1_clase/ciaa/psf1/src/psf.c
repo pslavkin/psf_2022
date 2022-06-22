@@ -6,7 +6,7 @@ struct header_struct {
    uint16_t N;
    uint16_t fs ;
    char     tail[4];
-} header={"head",0,128,10000,"tail"};
+} header={"head",0,256,5000,"tail"};
 
 void trigger(int16_t threshold)
 {

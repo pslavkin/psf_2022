@@ -2,15 +2,15 @@ import numpy                as     np
 import matplotlib.pyplot    as     plt
 from   matplotlib.animation import FuncAnimation
 import time
-
 np.set_printoptions(precision=3, suppress=False)
 
-fsC       = 100 # frec de sampleo que imita el 'continuo' cuando mas mejor
+fsC       = 10 # frec de sampleo que imita el 'continuo' cuando mas mejor
+
 fsD       = 10   # frec de sampleo discreta. Como el ejemplo es para una senial de 1hz, segun shanon no se podria recuperar si fsD es menor o igual a 2
-sigFrec   = 1
+sigFrec   = 12
 #sigFrec   = 11 #aliasing
-sigFrecHi = 10
-N         = 200
+sigFrecHi = 11
+N         = 20
 
 t   = np.arange(0,N/fsC      ,1/fsC)
 td  = np.arange(0,N/fsC+1/fsD,1/fsD) #un poquito mas largo para evitar erl redondeo
@@ -35,8 +35,6 @@ fftAxe = fig.add_subplot ( 2,1,2      )
 fftAxe.grid              ( True       )
 fftAxe.set_ylim          ( 0 ,0.25 )
 fftLn, = plt.plot        ( [],[],'b-',linewidth=4 )
-
-print((fsC/N )*fsC/2*t)
 
 def signal(n):
     return np.sin(2*np.pi*n*sigFrec)

@@ -24,11 +24,11 @@ print(arrA,type(arrA),type(arrA[0]))
 
 arrA8 = np.array([20,10,30]).astype(np.uint8) #array de 3
 
-#concatenacion con numpy
+#repetir con numpy
 arrB  = np.tile(arrA,3)        #replica un array n veces
 print(arrB)
 
-#append con numpy
+#append/concatenate con numpy
 arrC=np.append(arrB,arrB)
 print(arrC,len(arrC))
 
