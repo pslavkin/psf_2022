@@ -1,13 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-NC         = 100
-fsC        = 20
-tC         = np.arange(-NC/fsC,NC/fsC,1/fsC)
-
-#B=1
-#sinc=np.sinc(2*B*(tC))
-sinc=np.sin(np.pi*tC)/(np.pi*tC)
+NC  = 100
+fsC = 20
+tCn = np.arange(-NC//2,NC//2,1)
+tC  = tCn/fsC
+f   = tCn * fsC/NC
+B=3
+sinc=np.sinc(2*B*(tC))
 
 fig        = plt.figure()
 
@@ -16,7 +16,9 @@ plt.plot(tC,sinc,'b-',tC,tC*0,'r-')
 plt.grid()
 
 contiAxe = fig.add_subplot(2,1,2)
-plt.plot(fsC/2*(fsC/(2*NC))*tC[len(tC)//2:],np.abs(np.fft.fft(sinc))[0:len(tC)//2],'b-')
+fftSinc=1/NC*np.abs(np.fft.fft(sinc)**2)
+fftSinc=np.fft.fftshift(fftSinc)
+plt.plot(f,fftSinc,'b-')
 plt.grid()
 
 plt.get_current_fig_manager().window.showMaximized() #para QT5

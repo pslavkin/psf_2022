@@ -10,9 +10,9 @@
 #define SI  493.88
 
 uint32_t tick   = 0;
-uint16_t tone   = 100 ;
-uint16_t B      = 4000;
-uint16_t sweept = 5;
+uint16_t tone   = 1000 ;
+uint16_t B      = 4500;
+uint16_t sweept = 10;
 
 struct header_struct {
    char     pre[4];
@@ -20,7 +20,7 @@ struct header_struct {
    uint16_t N;
    uint16_t fs ;
    char     pos[4];
-} header={"head",0,128,8000,"tail"};
+} header={"head",0,256,10000,"tail"};
 
 void trigger(int16_t threshold)
 {
@@ -43,18 +43,18 @@ int main ( void ) {
    boardConfig (                  );
    uartConfig  ( UART_USB, 460800 );
    adcConfig   ( ADC_ENABLE       );
-//   dacConfig   ( DAC_ENABLE       );
+   dacConfig   ( DAC_ENABLE       );
    cyclesCounterInit ( EDU_CIAA_NXP_CLOCK_SPEED );
    while(1) {
       cyclesCounterReset();
       adc[sample] = (int16_t )adcRead(CH1)-512;                     // va de -512 a 511
       uartWriteByteArray ( UART_USB ,(uint8_t* )&adc[sample] ,sizeof(adc[0]) );
- //     float t=((tick%(sweept*header.fs))/(float)header.fs);
+      //float t=((tick%(sweept*header.fs))/(float)header.fs);
       float t=tick/(float)header.fs;
       tick++;
-      dacWrite( DAC, DOm(t)); // sweept
-      //dacWrite( DAC, 512*arm_sin_f32 (t*B/2*(t/sweept)*2*PI)+512); // sweept
-      //dacWrite( DAC, 512*arm_sin_f32 (t*tone*2*PI)+512);         // tono
+     // dacWrite( DAC, DOm(t)); // acorde
+     // dacWrite( DAC, 512*arm_sin_f32 (t*B/2*(t/sweept)*2*PI)+512); // sweept
+      dacWrite( DAC, 512*arm_sin_f32 (t*tone*2*PI)+512);         // tono
       if ( ++sample==header.N ) {
          gpioToggle ( LEDR ); // este led blinkea a fs/N
          sample = 0;

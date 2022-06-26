@@ -4,13 +4,27 @@ from   matplotlib.animation import FuncAnimation
 import time
 np.set_printoptions(precision=3, suppress=False)
 
-fsC       = 10 # frec de sampleo que imita el 'continuo' cuando mas mejor
-
+#ejemplo en donde se ve como una senial de exactamente B=fs se esconde en el sampleo
+fsC       = 100 # frec de sampleo que imita el 'continuo' cuando mas mejor
 fsD       = 10   # frec de sampleo discreta. Como el ejemplo es para una senial de 1hz, segun shanon no se podria recuperar si fsD es menor o igual a 2
-sigFrec   = 12
-#sigFrec   = 11 #aliasing
-sigFrecHi = 11
-N         = 20
+sigFrec   = 2
+sigFrecHi = 10 # senial que entra como aliasing
+N         = 200
+
+#ejemplo en donde se ve como una senial de B>fs/2 entra igualmente como ruido en el sampleo
+#fsC       = 100 # frec de sampleo que imita el 'continuo' cuando mas mejor
+#fsD       = 10   # frec de sampleo discreta. Como el ejemplo es para una senial de 1hz, segun shanon no se podria recuperar si fsD es menor o igual a 2
+#sigFrec   = 2
+#sigFrecHi = 11 # senial que entra como aliasing
+#N         = 200
+
+# ejemplo en donde se ve como los samples con puntos rojos a 11hz, pintan una
+# senial de 1hz, 
+#fsC       = 100 # frec de sampleo que imita el 'continuo' cuando mas mejor
+#fsD       = 10   # frec de sampleo discreta. Como el ejemplo es para una senial de 1hz, segun shanon no se podria recuperar si fsD es menor o igual a 2
+#sigFrec   = 11
+#sigFrecHi = 0 # senial que entra como aliasing
+#N         = 200
 
 t   = np.arange(0,N/fsC      ,1/fsC)
 td  = np.arange(0,N/fsC+1/fsD,1/fsD) #un poquito mas largo para evitar erl redondeo
@@ -52,14 +66,14 @@ def update(n):
     sigLn2.set_data(t[:n+1],s2[:n+1])
 
     s3[n]=signalHi(t[n]) #que pasa si agrego ruido
-#    sigLn3.set_data(t[:n+1],s3[:n+1])
+    sigLn3.set_data(t[:n+1],s3[:n+1])
 
     if(t[n]>=td[nd]):
         s1[nd] = signalHi(td[nd])      #captura
         sigLn1.set_data(td[:nd+1],s1[:nd+1])
         nd+=1
 
-    fft=np.abs ( 1/N*np.fft.fft(s2 ))**2
+    fft=np.abs ( 1/N*np.fft.fft(s3 ))**2
     fftAxe.set_ylim ( 0 ,np.max(fft)+0.01)
     fftAxe.set_xlim ( 0 ,fsC/2 )
     fftLn.set_data ( (fsC/N )*fsC*t ,fft)
