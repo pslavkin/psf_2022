@@ -6,7 +6,7 @@ np.set_printoptions(precision=3, suppress=False)
 fsC     = 100 #frec de sampleo que imita el 'continuo' cuando mas mejor
 fsD     = 10  #frec de sampleo discreta. Como el ejemplo es para una senial de 1hz, segun shanon no se podria recuperar si fsD es menor o igual a 2
 N       = 100
-signalF = 2
+signalF = 6
 
 tn   = np.arange(0,N,1)
 t    = tn/fsC
