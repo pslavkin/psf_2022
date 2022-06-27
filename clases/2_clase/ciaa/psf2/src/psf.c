@@ -29,6 +29,7 @@ void trigger(int16_t threshold)
    return;
 }
 
+
 int main ( void ) {
    uint16_t sample = 0;
    int16_t adc [ header.N ];
@@ -61,3 +62,4 @@ int main ( void ) {
          ;
    }
 }
+
