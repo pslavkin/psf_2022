@@ -37,7 +37,7 @@ sigAxe.set_ylim(-1,1)
 
 lnx_n,     = sigAxe.plot([],[],'ro',linewidth = 8,alpha  = 0.8)
 #subir el alpha para ver la original
-lnx_t,     = sigAxe.plot(t,x_t,'b-',alpha     = 0.0) #senial original "analogica" 
+lnx_t,     = sigAxe.plot(t,x_t,'b-',alpha     = 0.3) #senial original "analogica" 
 lnx_inter, = sigAxe.plot([],[],'g-',linewidth = 10,alpha = 0.5)
 
 def interpolate(timeC, x, B):
@@ -57,16 +57,16 @@ def init():
 
 def update(n):
     global nd
-    #input("wait press")
+    input("wait press")
 
     if(t[n]>=td[nd]): # instantes de sampleo
         x_n[nd] = signal ( td[nd] )
         lnx_n.set_data(td[:nd+1],x_n[:nd+1])
-#        plt.plot(td[nd]+tsinc,x_n[nd]*np.sinc(2*(fsD/2)*tsinc),'y-',linewidth=5,alpha=0.2)
+        plt.plot(td[nd]+tsinc,x_n[nd]*np.sinc(2*(fsD/2)*tsinc),'y-',linewidth=5,alpha=0.2)
         nd+=1
 
     x_inter=interpolate(t[:n+1],x_n[:nd],fsD/2)
-#    lnx_inter.set_data(t[0:len(x_inter)],x_inter)
+    lnx_inter.set_data(t[0:len(x_inter)],x_inter)
 
     fft=np.abs ( 1/N*np.fft.fft(x_t ))**2
     fftAxe.set_ylim ( 0 ,np.max(fft)+0.01)

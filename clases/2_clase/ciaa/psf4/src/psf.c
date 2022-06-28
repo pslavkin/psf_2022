@@ -67,12 +67,12 @@ int main ( void ) {
       len=printQ15(m,buf);
       uartWriteByteArray ( UART_USB ,buf ,len);
 
-      //n1=((q31_t)n1*(q31_t)n1)>>15;
-      //len=printQ15(n1,buf);
-      //uartWriteByteArray ( UART_USB ,buf ,len);
-      //len=printSqrtQ15(0x4000,buf); /square root of 2
-      //uartWriteByteArray ( UART_USB ,buf ,len);
-      //n1++;
+      n1=((q31_t)n1*(q31_t)n1)>>15;
+      len=printQ15(n1,buf);
+      uartWriteByteArray ( UART_USB ,buf ,len);
+      len=printSqrtQ15(0x4000,buf); //square root of 1/2
+      uartWriteByteArray ( UART_USB ,buf ,len);
+      n1++;
       sample++;
       gpioToggle ( LED1 );                                           // este led blinkea a fs/2
 
@@ -80,4 +80,3 @@ int main ( void ) {
          ;
    }
 }
-

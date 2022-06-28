@@ -9,12 +9,12 @@ sec  = 1
 B    = 5000
 t    = np.arange(0,sec,1/fs)
 
-#note = (2**15-1)*np.sin(2 * np.pi * B/2*(t/sec) *t)  #sweept
+note = (2**15-1)*np.sin(2 * np.pi * B/2*(t/sec) *t)  #sweept
 
-steps=10
-note=np.array([])
-for i in range(steps):
-    note=np.append(note,[(2**15-1)*np.sin(2 * np.pi * B*(i/steps) *t)])
+#steps=10
+#note=np.array([])
+#for i in range(steps):
+#    note=np.append(note,[(2**15-1)*np.sin(2 * np.pi * B*(i/steps) *t)])
 
 #note = (2**15-1)*np.sin(2 * np.pi * B * t)
 #note = (2**15-1)*sc.sawtooth(2 * np.pi * f * t)

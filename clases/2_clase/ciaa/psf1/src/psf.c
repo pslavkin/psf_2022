@@ -20,7 +20,7 @@ struct header_struct {
    uint16_t N;
    uint16_t fs ;
    char     pos[4];
-} header={"head",0,256,10000,"tail"};
+} header={"head",0,128,10000,"tail"};
 
 void trigger(int16_t threshold)
 {
@@ -53,8 +53,8 @@ int main ( void ) {
       float t=tick/(float)header.fs;
       tick++;
      // dacWrite( DAC, DOm(t)); // acorde
-     // dacWrite( DAC, 512*arm_sin_f32 (t*B/2*(t/sweept)*2*PI)+512); // sweept
-      dacWrite( DAC, 512*arm_sin_f32 (t*tone*2*PI)+512);         // tono
+      dacWrite( DAC, 512*arm_sin_f32 (t*B/2*(t/sweept)*2*PI)+512); // sweept
+     // dacWrite( DAC, 512*arm_sin_f32 (t*tone*2*PI)+512);         // tono
       if ( ++sample==header.N ) {
          gpioToggle ( LEDR ); // este led blinkea a fs/N
          sample = 0;

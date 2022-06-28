@@ -73,7 +73,8 @@ def init():
 
 def update(t):
     global header
-    #flushStream ( streamFile,header )
+    #atento con esta linea
+    flushStream ( streamFile,header )
     id,N,fs=findHeader ( streamFile,header )
     adc   = np.zeros(N)
     time  = np.arange(0,N/fs,1/fs)

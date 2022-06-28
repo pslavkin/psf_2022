@@ -1,16 +1,16 @@
 alumnos:
 --------------------------------------------------------------
-m0701 = Santiago Esteva                     = sesteva@fi.uba.ar                    = pendiente...
+m0701 = Santiago Esteva                     = sesteva@fi.uba.ar                    = electronico UBA, sensing and control, i+d hard y firm
 m0702 = Gonzalo Nahuel Vaca                 = vacagonzalo@gmail.com                = invap, linux realtime.
 m0703 = Jonathan Cagua                      = jonathan.cagua@gmail.com             = ecuador, electronic telecom, hard y firm 
-m0704 = William's Ernesto Limonchi Sandoval = williams.limonchi.sandoval@gmail.com =
-m0705 = Junior Daniel Monroy Guerrero       = juniordaniel1988@gmail.com           =
+m0704 = William's Ernesto Limonchi Sandoval = williams.limonchi.sandoval@gmail.com =  ---
+m0705 = Junior Daniel Monroy Guerrero       = juniordaniel1988@gmail.com           = electronico de venezuela, procesa datos en comodoro rivadavia el rubro energia
 m0706 = Joaquin Gaspar Ulloa                = joaquin.g.ulloa@gmail.com            = uba, fpga, satelital, sate.
-m0707 = Sofía Bertinat Vega                 = sofiabertinatv@gmail.com             =
+m0707 = Sofía Bertinat Vega                 = sofiabertinatv@gmail.com             = esta en espania, cursa offline
 m0708 = Lucas Orsi                          = lorsi@itba.edu.ar                    = electronico, itba, skyloom, soft python expert y firm
 m0709 = Gaspar Santamarina                  = gaspa.92@gmail.com                   = electronico, innovaspace embedded, hard y firm
-m0710 = Jose David Alvarado Moreno          = alvaradomoreno.jd@gmail.com          =
-m0711 = Mario Fernando Aguilar Montoya      = fernandoaguilar731010@gmail.com      =
+m0710 = Jose David Alvarado Moreno          = alvaradomoreno.jd@gmail.com          = electronico de Colombia, profesor de electronica digital
+m0711 = Mario Fernando Aguilar Montoya      = fernandoaguilar731010@gmail.com      = mecatronico de Bolivia, area de interes hardware
 
 repo de la clase:
 git@github.com:pslavkin/psf_2022.git
