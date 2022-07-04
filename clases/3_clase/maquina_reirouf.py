@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 #--------------------------------------
 fig        = plt.figure()
-fs         = 10.0
-N          = 10
+fs         = 8.0
+N          = 8
 #--------------------------------------
 circleAxe  = fig.add_subplot(2,2,1)
 circleLn, = plt.plot([] ,[] ,'ro-' ,linewidth = 2)
@@ -33,7 +33,8 @@ signalAxe.set_ylim(-2,2)
 signalFrec = 1
 signalData=[]
 def signal(f,n):
-    return 1*np.sin(2*np.pi*f*n*1/fs) + 0.2*np.sin(2*np.pi*f*2*n*1/fs)
+    return 1*np.cos(2*np.pi*f*n*1/fs)
+#    return 1*np.sin(2*np.pi*f*n*1/fs) + 0.2*np.sin(2*np.pi*f*2*n*1/fs)
 #    return 1 if n == 3 else 0
 #    if n<50: 
 #     return 0.5*np.sin(2*np.pi*f*n*1/fs)+0.5*np.sin(2*np.pi*f*1.5*n*1/fs)
@@ -66,12 +67,12 @@ def init():
 
 def update(nn):
     global circleData,signalData,promData,frecIter,circleFrec,circleLg
-    #input()
+    input()
     circleData = []
     signalData = []
     for n in range(N):
         circleData.append(circle(circleFrec[frecIter],n)*signal(signalFrec,n))
-        mass=np.average(circleData)
+        mass=np.average(circleData)*N
         signalData.append(signal(signalFrec,n))
         promData[frecIter]=mass
         print("iter: {0:d} data: {1:2.2f} prom: {2:2.2f}".format(n,circleData[-1],mass))
