@@ -2,7 +2,7 @@ from fxpmath import Fxp
 import numpy as np
 
 M      = 1
-N      = 2
+N      = 15
 SIGNED = True
 
 if(SIGNED):
