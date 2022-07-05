@@ -33,8 +33,8 @@ signalAxe.set_ylim(-2,2)
 signalFrec = 1
 signalData=[]
 def signal(f,n):
-    return 1*np.cos(2*np.pi*f*n*1/fs)
-#    return 1*np.sin(2*np.pi*f*n*1/fs) + 0.2*np.sin(2*np.pi*f*2*n*1/fs)
+    #    return 1*np.sin(2*np.pi*f*n*1/fs)
+    return 1*np.cos(2*np.pi*f*n*1/fs) + 1*np.sin(2*np.pi*f*n*1/fs)
 #    return 1 if n == 3 else 0
 #    if n<50: 
 #     return 0.5*np.sin(2*np.pi*f*n*1/fs)+0.5*np.sin(2*np.pi*f*1.5*n*1/fs)
@@ -67,12 +67,12 @@ def init():
 
 def update(nn):
     global circleData,signalData,promData,frecIter,circleFrec,circleLg
-    input()
+    #input()
     circleData = []
     signalData = []
     for n in range(N):
         circleData.append(circle(circleFrec[frecIter],n)*signal(signalFrec,n))
-        mass=np.average(circleData)*N
+        mass=np.average(circleData)
         signalData.append(signal(signalFrec,n))
         promData[frecIter]=mass
         print("iter: {0:d} data: {1:2.2f} prom: {2:2.2f}".format(n,circleData[-1],mass))
@@ -83,9 +83,9 @@ def update(nn):
                       np.imag(circleData))
     signalRLn.set_data(tData[:n+1],np.real(signalData))
     signalILn.set_data(tData[:n+1],np.imag(signalData))
-    promRLn.set_data(circleFrec[:frecIter+1],np.real(promData[:frecIter+1]))
-    promILn.set_data(circleFrec[:frecIter+1],np.imag(promData[:frecIter+1]))
-    #promMagLn.set_data(circleFrec[:frecIter+1],np.abs(promData[:frecIter+1])**2)
+#    promRLn.set_data(circleFrec[:frecIter+1],np.real(promData[:frecIter+1]))
+#    promILn.set_data(circleFrec[:frecIter+1],np.imag(promData[:frecIter+1]))
+    promMagLn.set_data(circleFrec[:frecIter+1],np.abs(promData[:frecIter+1])**2)
 #    promPhaseLn.set_data(circleFrec[:frecIter+1],np.angle(promData[:frecIter+1])/np.pi)
     circleLn.set_label(circleFrec[frecIter])
     circleLg=circleAxe.legend()

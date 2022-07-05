@@ -4,7 +4,7 @@ from matplotlib.animation import FuncAnimation
 
 fig        = plt.figure()
 fs         = 20
-N          = 20
+N          = 200
 
 circleAxe  = fig.add_subplot(1,2,1)
 circleLn,  = plt.plot([],[],'ro',linewidth          = 5)
@@ -38,6 +38,6 @@ def update(n):
     circle3DLn = circle3DAxe.plot3D(np.real(circleData),np.imag(circleData),nData[:n+1],'g-o',linewidth=2)
     return circleLn,radioLn,circle3DLn
 
-ani=FuncAnimation(fig,update,N,init,interval=10 ,blit=False,repeat=True)
+ani=FuncAnimation(fig,update,N,init,interval=100 ,blit=False,repeat=True)
 plt.get_current_fig_manager().window.showMaximized() #para QT5
 plt.show()

@@ -5,7 +5,7 @@ from matplotlib.animation import FuncAnimation
 fig        = plt.figure()
 fs         = 10.0
 N          = 10
-Z          = N+100
+Z          = N
 #--------------------------------------
 circleAxe  = fig.add_subplot(2,2,1)
 circleLn, = plt.plot([] ,[] ,'ro-' ,linewidth = 2)
@@ -30,11 +30,11 @@ signalLn,  = plt.plot([],[],'b-o')
 signalAxe.grid(True)
 signalAxe.set_xlim(0,Z/fs)
 signalAxe.set_ylim(-2,2)
-signalFrec = 1.2
+signalFrec = 2
 signalData=[]
 def signal(f,n):
     if n<N: 
-        return np.cos(2*np.pi*f*n*1/fs)
+        return np.cos(2*np.pi*f*n*1/fs)+ np.sin(2*np.pi*2.3*n*1/fs)
     else:
         return 0
 #    if n<50: 
