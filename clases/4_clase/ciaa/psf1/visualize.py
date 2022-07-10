@@ -9,7 +9,7 @@ import serial
 STREAM_FILE=("/dev/ttyUSB3","serial")
 #STREAM_FILE=("log.bin","file")
 
-header = { "pre": b"*header*", "id": 0, "N": 128, "fs": 10000, "cutFrec":0,"pos":b"end*" }
+header = { "head": b"head", "id": 0, "N": 128, "fs": 10000, "cutFrec":0,"tail":b"tail" }
 fig    = plt.figure ( 1 )
 fig.suptitle('Transformada inversa de Fourier', fontsize=16)
 
@@ -39,19 +39,19 @@ fftAxe.grid     ( True   )
 cutFrecZoneLn   = fftAxe.fill_between([0,0],100,-100,facecolor = "yellow",alpha = 0.2)
 
 def findHeader(f,h):
-    data=bytearray(b'12345678')
-    while data!=h["pre"]:
+    data=bytearray(b'1234')
+    while data!=h["head"]:
         data+=f.read(1)
-        if len(data)>len(h["pre"]):
+        if len(data)>len(h["head"]):
             del data[0]
     h["id"]      = readInt4File(f,4)
     h["N" ]      = readInt4File(f)
     h["fs"]      = readInt4File(f)
     h["cutFrec"] = readInt4File(f)
     data=bytearray(b'1234')
-    while data!=h["pos"]:
+    while data!=h["tail"]:
         data+=f.read(1)
-        if len(data)>len(h["pos"]):
+        if len(data)>len(h["tail"]):
             del data[0]
     print({k:round(v,2) if isinstance(v,float) else v for k,v in h.items()})
     return h["id"],h["N"],h["fs"],h["cutFrec"]

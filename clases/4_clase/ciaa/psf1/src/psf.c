@@ -11,7 +11,7 @@ uint16_t B      = 2500;
 uint16_t sweept = 5;
 
 struct header_struct {
-   char     pre[8];
+   char     pre[4];
    uint32_t id;
    uint16_t N;
    uint16_t fs ;
@@ -19,7 +19,7 @@ struct header_struct {
    char     pos[4];
 } __attribute__ ((packed)); //importante para que no paddee
 
-struct header_struct header={"*header*",0,128,10000,CUTFREC,"end*"};
+struct header_struct header={"head",0,128,10000,CUTFREC,"tail"};
 
 void trigger(int16_t threshold)/*{{{*/
 {
@@ -98,17 +98,17 @@ int main ( void ) {
          arm_cfft_q15       ( &CS ,fftInOut ,0 ,1 ); //0 directa, 1 inversa
 
 // FILTRADO BASICO RECORTANDO EN FREC
-       fftInOut[0]=0; //elimino la continua
-       fftInOut[1]=0;
-       int cutBin=CUTFREC/(header.fs/header.N); //defino el n donde comenzar a cortar
-       for(int i=0;i<=(header.N/2);i++) {        //solo recorro la mitad, porque la otra mitad es compleja conjugada asi que borro de los 2 lados
-          if(i>=cutBin ) {
-             fftInOut[i*2]                  = 0; //borro bin parte real
-             fftInOut[i*2+1]                = 0; //borro bin parte compleja
-             fftInOut[(header.N-1)*2-i*2]   = 0; //lo mismo pero de atras para adelante
-             fftInOut[(header.N-1)*2-i*2+1] = 0;
-          }
-       }
+//       fftInOut[0]=0; //elimino la continua
+//       fftInOut[1]=0;
+//       int cutBin=CUTFREC/(header.fs/header.N); //defino el n donde comenzar a cortar
+//       for(int i=0;i<=(header.N/2);i++) {        //solo recorro la mitad, porque la otra mitad es compleja conjugada asi que borro de los 2 lados
+//          if(i>=cutBin ) {
+//             fftInOut[i*2]                  = 0; //borro bin parte real
+//             fftInOut[i*2+1]                = 0; //borro bin parte compleja
+//             fftInOut[(header.N-1)*2-i*2]   = 0; //lo mismo pero de atras para adelante
+//             fftInOut[(header.N-1)*2-i*2+1] = 0;
+//          }
+//       }
 //---------ANTI transformada---------------------
          init_cfft_instance ( &CS,header.N        );
          arm_cfft_q15       ( &CS ,fftInOut ,1 ,1 );
