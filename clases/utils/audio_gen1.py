@@ -3,11 +3,12 @@ import numpy as np
 import scipy.signal as sc
 import simpleaudio as sa
 
-f    = 100
+f    = 500
 fs   = 44100
-sec  = 50
-B    = 500
+sec  = 10
+B    = 2500
 t    = np.arange(0,sec,1/fs)
+z    = np.zeros(len(t))
 
 note = (2**15-1)*np.sin(2 * np.pi * B/2*(t/sec) *t)  #sweept
 
@@ -20,9 +21,10 @@ note = (2**15-1)*np.sin(2 * np.pi * B/2*(t/sec) *t)  #sweept
 #note = (2**15-1)*sc.sawtooth(2 * np.pi * f * t)
 #note = (2**15-1)*sc.square(2 * np.pi * f * t)
 
+
 #fig=plt.figure(1)
 #plt.plot(t,note)
-#plt.plot(t[0:5*fs//f],note[:5*fs//f])
+##plt.plot(t[0:5*fs//f],note[:5*fs//f])
 #plt.show()
 
 audio = note.astype(np.int16)

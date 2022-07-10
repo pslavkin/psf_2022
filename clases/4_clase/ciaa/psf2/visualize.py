@@ -2,59 +2,47 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from   matplotlib.animation import FuncAnimation
+import struct
 import os
 import io
 import serial
 
-STREAM_FILE=("/dev/ttyUSB2","serial")
+STREAM_FILE=("/dev/ttyUSB3","serial")
 #STREAM_FILE=("log.bin","file")
 
-header = { "pre": b"*header*", "id": 0, "N": 128, "fs": 10000, "cutFrec":0,"pos":b"end*" }
+header = { "head": b"head", "id": 0, "N": 64, "fs": 10000,"tail":b"tail" }
 fig    = plt.figure ( 1 )
-fig.suptitle('Transformada inversa de Fourier', fontsize=16)
 
-#--------------------------ADC--------------------------
-adcAxe = fig.add_subplot ( 3,1,1                  )
-adcLn, = plt.plot        ( [],[],'r-o',linewidth=12, alpha = 0.3 ,label  = "adc")
+adcAxe = fig.add_subplot ( 2,1,1                  )
+adcLn, = plt.plot        ( [],[],'r-',linewidth=4 )
 adcAxe.grid              ( True                   )
-adcAxe.set_ylim          ( -1.2 ,1.2              )
+adcAxe.set_ylim          ( -1.65 ,1.65            )
 
-#----------------------ciaaSynth vs ifft(fft(adc))--------------------------
-synthAxe     = fig.add_subplot ( 3,1,2                                 )
-synthAxe.set_title("ciaaSynth vs ifft(fft(adc))",rotation=0,fontsize=10,va="center")
-ifftLn,      = plt.plot ( [] ,[] ,'r-' ,linewidth = 2  ,alpha = 0.3 ,label  = "IFFT(FFT(adc))")
-ciaaSynthLn, = plt.plot ( [] ,[] ,'b-' ,linewidth = 12 ,alpha = 0.4  ,label = "ciaaSynth" )
-synthLg=synthAxe.legend()
-synthAxe.grid     ( True      )
-synthAxe.set_ylim ( -1.2 ,1.2 )
-
-#----------------------fft(ciaaSynth) vs fft(adc)--------------------------
-fftAxe        = fig.add_subplot ( 3,1,3 )
-fftAxe.set_title("fft(ciaaSynth) vs fft(adc)",rotation = 0,fontsize = 10,va = "center")
-fftLn,     = plt.plot ( [] ,[] ,'r-o' ,linewidth = 2  ,alpha = 0.3 ,label = "abs(FFT(adc))" )
-ciaaFftLn, = plt.plot ( [] ,[] ,'b-o' ,linewidth = 12 ,alpha = 0.5 ,label = "abs(FFT(ciaaSynth))" )
-fftLg      = fftAxe.legend()
-fftAxe.set_ylim ( 0,0.05 )#np.max(absFft))
-fftAxe.grid     ( True   )
-cutFrecZoneLn   = fftAxe.fill_between([0,0],100,-100,facecolor = "yellow",alpha = 0.2)
+corrAxe      = fig.add_subplot ( 2,1,2                               )
+corrLn,      = plt.plot        ( [],[],'b-',linewidth = 5,alpha = 1 )
+thresholdLn, = corrAxe.plot([],[],'r-',linewidth      = 2,alpha = 0.8)
+corrAxe.grid ( True )
 
 def findHeader(f,h):
-    data=bytearray(b'12345678')
-    while data!=h["pre"]:
-        data+=f.read(1)
-        if len(data)>len(h["pre"]):
-            del data[0]
-    h["id"]      = readInt4File(f,4)
-    h["N" ]      = readInt4File(f)
-    h["fs"]      = readInt4File(f)
-    h["cutFrec"] = readInt4File(f)
-    data=bytearray(b'1234')
-    while data!=h["pos"]:
-        data+=f.read(1)
-        if len(data)>len(h["pos"]):
-            del data[0]
+    find=False
+    while(not find):
+        data=bytearray(len(h["head"]))
+        while data!=h["head"]:
+            data+=f.read(1)
+            data[:]=data[-4:]
+
+        h["id"]       = readInt4File(f,4)
+        h["N" ]       = readInt4File(f)
+        h["fs"]       = readInt4File(f)
+
+        data=bytearray(b'1234')
+        for i in range(4):
+            data+=f.read(1)
+            data[:]=data[-4:]
+        find = data==h["tail"]
+
     print({k:round(v,2) if isinstance(v,float) else v for k,v in h.items()})
-    return h["id"],h["N"],h["fs"],h["cutFrec"]
+    return h["id"],h["N"],h["fs"]
 
 def readInt4File(f,size=2,sign=False):
     raw=f.read(1)
@@ -62,53 +50,55 @@ def readInt4File(f,size=2,sign=False):
         raw+=f.read(1)
     return (int.from_bytes(raw,"little",signed=sign))
 
+def readFloat4File(f,size=4):
+    raw=f.read(1)
+    while( len(raw) < size):
+        raw+=f.read(1)
+    return struct.unpack('<f',raw)[0]
+
 def flushStream(f,h):
     if(STREAM_FILE[1]=="serial"): #pregunto si estoy usando la bibioteca pyserial o un file
         f.flushInput()
     else:
         f.seek ( 2*h["N"],io.SEEK_END)
 
-def readSamples(adc,synth,N,trigger=False,th=0):
-    state="waitLow" if trigger else "sampling"
-    i=0
-    for t in range(N):
-        sample = (readInt4File(streamFile,sign = True)*1.65)/(2**6*512)
-        #part real plus imag
-        ciaaSynth = (readInt4File(streamFile,sign = True)*1.65*2**(np.log2(N)-6))/512 #wah?! es que segun el N la salida de la cfft de cmsis te corre el q15. la cuante da que para 128 hay que multiplicar por 1 , 256:2, 512:3, etc.
-        state,nextI= {
-                "waitLow" : lambda sample,i: ("waitHigh",0) if sample<th else ("waitLow" ,0),
-                "waitHigh": lambda sample,i: ("sampling",0) if sample>th else ("waitHigh",0),
-                "sampling": lambda sample,i: ("sampling",i+1)
-                }[state](sample,i)
-        adc[i]=sample
-        synth[i]=ciaaSynth
-        i=nextI
+def readSamples(adc,corr,N):
+    for i in range(N):
+        adc[i]      = readFloat4File(streamFile)*1.65
+        corr[2*i]   = readFloat4File(streamFile)
+        corr[2*i+1] = readFloat4File(streamFile)
+
+stop=False
 
 def update(t):
-    global header
-    flushStream ( streamFile,header )
-    id,N,fs,cutFrec=findHeader ( streamFile,header )
-    nData     = np.arange(0,N,1) #arranco con numeros enteros para evitar errores de float
-    adc       = np.zeros(N)
-    ciaaSynth = np.zeros(N).astype(complex)
-    tData     = nData/fs
-    readSamples(adc,ciaaSynth,N,False,0)
+    global header,stop
+#    flushStream ( streamFile,header )
+    if stop:
+        input()
+        stop=False
 
-    adcAxe.set_xlim ( 0    ,N/fs )
-    adcLn.set_data  ( tData ,adc  )
+    id,N,fs=findHeader ( streamFile,header )
+    adc      = np.zeros(N).astype(float)
+    ciaaCorr = np.zeros(2*N).astype(float)
+    timeN    = np.arange(0,2*N-1,1)
+    readSamples(adc,ciaaCorr,N)
 
-    synthAxe.set_xlim    ( 0 ,N/fs                                   )
-    ciaaSynthLn.set_data ( tData ,ciaaSynth                          )
-    ifftLn.set_data      ( tData ,np.real(np.fft.ifft(np.fft.fft(adc ))))
+    adcAxe.set_xlim ( 0          ,(2*N-1)/fs )
+    adcLn.set_data  ( timeN[0:N]/fs ,adc   )
 
-    fftAxe.set_xlim ( -fs/2,fs/2-fs/N)
-    fData=nData*fs/N-fs/2
-    ciaaFftLn.set_data (fData ,np.abs(np.fft.fftshift(np.fft.fft(ciaaSynth))/N)**2)
-    fftLn.set_data (fData ,np.abs(np.fft.fftshift(np.fft.fft(adc))/N)**2)
+    corrLn.set_data ( timeN ,ciaaCorr[:2*N-1])
+    corrAxe.set_ylim ( 0 ,1.65)
+    corrAxe.set_xlim ( 0 ,2*N-1)
+    THR=1.0
+    thresholdLn.set_data(timeN,np.ones(2*N-1)*THR)
 
-    cutFrecZoneLn = fftAxe.fill_between([-cutFrec,cutFrec],100,-100,facecolor="yellow",alpha=0.5)
+    m=max(ciaaCorr[:N-1])
+    if m>THR and m<10:
+        print("find",m,np.where(m==ciaaCorr)[0])
+        stop=True
 
-    return adcLn, ciaaSynthLn, ifftLn, ciaaFftLn, fftLn, cutFrecZoneLn
+
+    return adcLn, corrLn,   thresholdLn,
 
 #seleccionar si usar la biblioteca pyserial o leer desde un archivo log.bin
 if(STREAM_FILE[1]=="serial"):
@@ -116,7 +106,8 @@ if(STREAM_FILE[1]=="serial"):
 else:
     streamFile=open(STREAM_FILE[0],"rb",0)
 
-ani=FuncAnimation(fig,update,10000,init_func=None,blit=True,interval=1,repeat=True)
+ani=FuncAnimation(fig,update,10000,init_func=None,blit=True,interval=10,repeat=True)
+plt.draw()
 plt.get_current_fig_manager().window.showMaximized() #para QT5
 plt.show()
 streamFile.close()

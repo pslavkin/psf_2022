@@ -18,7 +18,7 @@ struct header_struct {
    char		pos[4];
 } __attribute__ ((packed));
 
-struct header_struct header={"head",0,128,10000,0,0,"tail"};
+struct header_struct header={"head",0,128,2000,0,0,"tail"};
 
 void trigger(int16_t threshold)
 {

@@ -6,7 +6,7 @@ import os
 import io
 import serial
 
-STREAM_FILE=("/dev/ttyUSB2","serial")
+STREAM_FILE=("/dev/ttyUSB3","serial")
 #STREAM_FILE=("log.bin","file")
 
 header = { "pre": b"*header*", "id": 0, "N": 128, "fs": 10000, "cutFrec":0,"pos":b"end*" }

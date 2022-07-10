@@ -80,7 +80,7 @@ def readSamples(adc,fft,N,trigger=False,th=0):
 
 def update(t):
     global header
-    flushStream ( streamFile,header )
+#    flushStream ( streamFile,header )
     id,N,fs,maxIndex,maxValue=findHeader ( streamFile,header )
     adc     = np.zeros(N)
     ciaaFft = np.zeros(N).astype(complex)
