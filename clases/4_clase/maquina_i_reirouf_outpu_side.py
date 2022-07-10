@@ -23,7 +23,7 @@ signalRLn, = plt.plot(tData ,np.real(signal(signalFrec,nData)) ,'b-X' ,linewidth
 signalILn, = plt.plot(tData ,np.imag(signal(signalFrec,nData)) ,'r-X' ,linewidth = 3 ,alpha = 1,label="imag")
 signalAxe.legend()
 signalAxe.grid(True)
-signalAxe.set_xlim(0,N/fs)
+signalAxe.set_xlim(0,(N-1)/fs)
 signalAxe.set_ylim(np.min(np.real(signal(signalFrec,nData)))-0.1,np.max(np.real(signal(signalFrec,nData)))+0.1)
 #--------------------------------------
 fftAxe   = fig.add_subplot(4,1,2)
@@ -51,12 +51,12 @@ def circle(f,n):
 #--------------------------------------
 ifftAxe=fig.add_subplot(4,1,4)
 ifftAxe.set_title("Anti transformada como suma de vectores",rotation=0,fontsize=10,va="center")
-ifftAxe.set_xlim ( 0,N*1/fs )
+ifftAxe.set_xlim ( 0,(N-1)/fs )
 ifftAxe.set_ylim ( -1,1     )
 sumaRLn,  = plt.plot([], [] ,'b-X' ,linewidth = 12 ,alpha = 0.5)
 sumaILn,  = plt.plot([], [] ,'r-X' ,linewidth = 12 ,alpha = 0.5)
 sumaData = np.zeros(N).astype("complex")
-ifftAxe.set_xlim(0,N/fs)
+ifftAxe.set_xlim(0,(N-1)/fs)
 ifftAxe.set_ylim(np.min(np.real(signal(signalFrec,nData)))-0.1,np.max(np.real(signal(signalFrec,nData)))+0.1)
 ifftPointRLn, = plt.plot([], [] ,'k-o' ,linewidth = 12 ,alpha = 1)
 ifftPointILn, = plt.plot([], [] ,'k-o' ,linewidth = 12 ,alpha = 1)
@@ -65,7 +65,7 @@ def init():
     return sumaRLn,
 
 def update(n):
-    input()
+    #input()
     point=[]
     for i in range(N):
         point.append(circle(circleFrec[i],n)*fftData[i])

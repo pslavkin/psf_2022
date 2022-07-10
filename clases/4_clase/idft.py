@@ -5,12 +5,12 @@ import scipy.signal as sc
 #--------------------------------------
 fig  = plt.figure(1)
 fig.suptitle('Transformada inversa de Fourier', fontsize=16)
-fs   = 50
-N    = 100
-skip = 100
-#--------------------------------------
-#def signal(f,n):
-#    return 1*np.cos(2*np.pi*f*n*1/fs)
+fs   = 8
+N    = 8
+skip = 0
+#-------Diferentes señales de interes-------------------------------
+def signal(f,n):
+    return 1*np.cos(2*np.pi*f*n*1/fs)
 #    return np.cos(2*np.pi*f*n*1/fs)+0.2j*np.cos(2*np.pi*2*f*n*1/fs)+0.4j*np.cos(2*np.pi*2.5*f*n*1/fs)
 #
 #    return 0.5*sc.square  (2*np.pi*f*n*1/fs,0.5)
@@ -18,12 +18,12 @@ skip = 100
 #    return 10 if n == 0 else 0
 #    return 10j if n == 1 else -10j if n==N-1 else 0
 #    return 10 if n == N//2 else 0
-#--------------------------------------
+#-----Cargo formas de onda desde archivos npy---------------------------
 #conejo=np.load("../utils/pajaro.npy")[::1]
-conejo=np.load("../utils/conejo.npy")[::1]
-N=len(conejo)
-def signal(f,n):
-    return conejo[n]
+#conejo=np.load("../utils/conejo.npy")[::1]
+#N=len(conejo)
+#def signal(f,n):
+#    return conejo[n]
 #--------------------------------------
 nData       = np.arange(0,N,1) #arranco con numeros enteros para evitar errores de float
 #--------------------------------------
@@ -49,9 +49,9 @@ signalAxe.set_title("señal",rotation=0,fontsize=10,va="center")
 signalRLn,  = plt.plot([],[],'b-o',linewidth=3,alpha=0.6)
 signalILn,  = plt.plot([],[],'r-o',linewidth=3,alpha=0.6)
 signalAxe.grid(True)
-signalAxe.set_xlim(0,N/fs)
+signalAxe.set_xlim(0,(N-1)/fs)
 signalAxe.set_ylim(-1,1)
-signalFrec = 2
+signalFrec = 1
 signalData=[]
 
 #--------------------------------------
