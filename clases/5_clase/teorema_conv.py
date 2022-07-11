@@ -125,7 +125,7 @@ def init():
 
 def update(i):
     global yData,b,realtimeConv,xZoneLn
-    input()
+    #input()
     if i<=N-1:
         hLn.set_data(tData[i:i+M],firData*xData[i])
         xZoneLn = xAxe.fill_between([tData[i],tData[i+M-1]],10,-10,facecolor="yellow",alpha=0.5)

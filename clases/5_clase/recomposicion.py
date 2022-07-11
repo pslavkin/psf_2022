@@ -51,7 +51,7 @@ def init():
 
 def update(i):
     global signalData,impulseData
-    input()
+    #input()
     signalData.append(signal(i))
     signalLn.set_data(tData[:i+1],signalData)
 

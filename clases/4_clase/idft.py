@@ -1,7 +1,7 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-import scipy.signal as sc
+import numpy                as     np
+import matplotlib.pyplot    as     plt
+from   matplotlib.animation import FuncAnimation
+import scipy.signal         as     sc
 #--------------------------------------
 fig  = plt.figure(1)
 fig.suptitle('Transformada inversa de Fourier', fontsize=16)
@@ -11,7 +11,8 @@ skip = 0
 #-------Diferentes señales de interes-------------------------------
 def signal(f,n):
     return 1*np.cos(2*np.pi*f*n*1/fs)
-#    return np.cos(2*np.pi*f*n*1/fs)+0.2j*np.cos(2*np.pi*2*f*n*1/fs)+0.4j*np.cos(2*np.pi*2.5*f*n*1/fs)
+#    return 1j*np.cos(2*np.pi*f*n*1/fs)
+#    return np.cos(2*np.pi*f*n*1/fs)+0.2j*np.cos(2*np.pi*2*f*n*1/fs)#+0.4j*np.cos(2*np.pi*2.5*f*n*1/fs)
 #
 #    return 0.5*sc.square  (2*np.pi*f*n*1/fs,0.5)
 #    return 1*sc.sawtooth(2*np.pi*f*n*1/fs,1)
@@ -120,12 +121,12 @@ def updateT(frecIter):
     circleLg=circleAxe.legend()
     if frecIter==N-1:
         aniT._func     = updateF
-        aniT._interval = 100
+        aniT._interval = 1000
         signalsiter=0
 
     return circleLn,circleLg,signalRLn,signalILn,massLn,promRLn,promILn,promZoneLn
 
-aniT=FuncAnimation(fig,updateT,N,init,interval=100 ,blit=False,repeat=True,cache_frame_data=False)
+aniT=FuncAnimation(fig,updateT,N,init,interval=10 ,blit=False,repeat=True,cache_frame_data=False)
 plt.get_current_fig_manager().window.showMaximized()
 plt.show()
 plt.close(1)
