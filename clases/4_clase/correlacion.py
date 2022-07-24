@@ -46,15 +46,15 @@ def init():
     global yData,x
     x=np.zeros(N+M-1+M-1)
     x[N:N+signalLen]=signal
-  #  x[N+30:N+30+signalLen]=signal
-  #  x+=np.random.normal(0,2,N+M-1+M-1) #y si agrego ruido ??
+    x[N+30:N+30+signalLen]=signal
+    x+=np.random.normal(0,2,N+M-1+M-1) #y si agrego ruido ??
     xLn.set_data(nData,x)
     yData *= 0
     return xLn,hLn,yLn,yZoneLn,xZoneLn,yDotLn,thresholdLn,
 #
 def update(i):
     global hData,yData,x
-#    #input("actual loop: {}\r\n".format(i))
+    #input("actual loop: {}\r\n".format(i))
     hLn.set_data(nData[i:i+M],h)
 #
     yData[i]=np.sum(x[i:i+M]*h) #aca esta la operacion de convolucion punto a punto

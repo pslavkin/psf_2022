@@ -6,7 +6,7 @@ import simpleaudio as sa
 f    = 500
 fs   = 44100
 sec  = 10
-B    = 2500
+B    = 1000
 t    = np.arange(0,sec,1/fs)
 z    = np.zeros(len(t))
 

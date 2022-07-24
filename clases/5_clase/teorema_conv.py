@@ -10,8 +10,8 @@ N           = 100
 signalFrec1 = 2
 signalFrec2 = 10
 
-firData,=np.load("../utils/hi_pass_short.npy").astype(float)
-#firData,=np.load("../utils/low_pass.npy").astype(float)
+#firData,=np.load("../utils/hi_pass_short.npy").astype(float)
+firData,=np.load("../utils/low_pass.npy").astype(float)
 #firData,=np.load("../utils/hi_pass.npy").astype(float)
 firData=np.insert(firData,0,firData[-1]) #ojo que pydfa me guarda 1 dato menos...
 M          = len(firData)

@@ -10,11 +10,11 @@ N    = 80
 skip = 0
 #-------Diferentes señales de interes-------------------------------
 def signal(f,n):
-#    return 1*np.cos(2*np.pi*f*n*1/fs)
+    return 1*np.cos(2*np.pi*f*n*1/fs)
 #    return 1j*np.cos(2*np.pi*f*n*1/fs)
 #    return np.cos(2*np.pi*f*n*1/fs)+0.2j*np.cos(2*np.pi*2*f*n*1/fs)#+0.4j*np.cos(2*np.pi*2.5*f*n*1/fs)
 #
-    return 0.5*sc.square  (2*np.pi*f*n*1/fs,0.5)
+#    return 0.5*sc.square  (2*np.pi*f*n*1/fs,0.5)
 #    return 1*sc.sawtooth(2*np.pi*f*n*1/fs,1)
 #    return 10 if n == 0 else 0
 #    return 10j if n == 1 else -10j if n==N-1 else 0

@@ -17,7 +17,7 @@ struct header_struct {
    char     pos[4];
 } __attribute__ ((packed)); //importante para que no paddee
 
-struct header_struct header={"*header*",0,64,10000,h_LENGTH,"end*"};
+struct header_struct header={"*header*",0,256,10000,h_LENGTH,"end*"};
 
 void trigger(int16_t threshold)/*{{{*/
 {

@@ -7,11 +7,11 @@ fig        = plt.figure(1)
 fig.suptitle('Ouput side convolution', fontsize=16)
 def h():
 #    return np.random.normal(0,2,128)
-#    return np.array([1,2])
+    return np.array([1,2])
     return np.load("../utils/low_pass.npy").astype(float)[0]
     
 def x():
-#    return [3,4,2]
+    return [3,4]
     return np.random.normal(0,0.1,1000)
 
 fs        = len(x())
@@ -46,7 +46,8 @@ yLn,    = plt.plot([],[],'g-o',linewidth = 15,alpha = 0.2)
 yDotLn, = plt.plot([],[],'ko',linewidth  = 15,alpha = 0.8)
 yAxe.grid(True)
 yAxe.set_xlim(-(M-1)-0.1,M+N-2+0.1)
-yAxe.set_ylim(-0.1,0.1)
+#yAxe.set_ylim(-0.1,0.1)
+yAxe.set_ylim(-0,12)
 yAxe.set_ylabel("convolucion",rotation=0,labelpad=20,fontsize=8,va="center")
 #--------------------------------------
 def init():
@@ -56,7 +57,7 @@ def init():
 
 def update(i):
     global hData,yData
-    input("actual loop: {}\r\n".format(i))
+    #input("actual loop: {}\r\n".format(i))
     hLn.set_data(nData[i:i+M],hDataFlip)
 
     yData[i]=np.sum(xData[i:i+M]*hDataFlip) #aca esta la operacion de convolucion punto a punto

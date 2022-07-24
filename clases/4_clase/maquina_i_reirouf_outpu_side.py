@@ -65,7 +65,7 @@ def init():
     return sumaRLn,
 
 def update(n):
-    #input()
+    input()
     point=[]
     for i in range(N):
         point.append(circle(circleFrec[i],n)*fftData[i])
