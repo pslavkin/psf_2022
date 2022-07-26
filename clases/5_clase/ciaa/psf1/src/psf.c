@@ -48,8 +48,8 @@ int main ( void ) {
          sample = 0;
 
 //------------CONVOLUCION------------------
-//       arm_conv_q15       ( adc,header.N,h,h_LENGTH,y);
-         arm_conv_fast_q15  ( adc,header.N,h,h_LENGTH,y);
+       arm_conv_q15       ( adc,header.N,h,h_LENGTH,y);
+//         arm_conv_fast_q15  ( adc,header.N,h,h_LENGTH,y);
 
 //------------ENVIO DE TRAMA------------------
          header.id++;

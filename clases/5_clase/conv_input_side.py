@@ -6,14 +6,14 @@ from matplotlib.animation import FuncAnimation
 fig        = plt.figure(1)
 fig.suptitle('Input side convolution', fontsize=16)
 fs    = 3
-N     = 3
+N     = 2
 M     = 2
 xFrec = 1
 nData = np.arange(0,N+M-1,1)
 
 #--------------------------------------
 def x(n):
-    return np.array([3,4,2])[n]
+    return np.array([3,4])[n]
 
 tData = nData/fs
 xData = []
@@ -52,7 +52,7 @@ def init():
 
 def update(i):
     global xData,hData,yData
-    input("actual loop: {}\r\n".format(i))
+    #input("actual loop: {}\r\n".format(i))
 
     xData.append(x(i))
     xLn.set_data(nData[:i+1],xData)
