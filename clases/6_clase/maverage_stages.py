@@ -8,16 +8,16 @@ fs          = 100
 N           = 100
 signalFrec1 = 2
 signalFrec2 = 10
-convStages  = 1
+convStages  = 2
 fig.suptitle('Filtrado FIR np.convolve multiples etapas: {}'.format(convStages), fontsize=16)
 
 #kernel="../utils/hi_pass_short.npy"
-#kernel="../utils/average_11_stages1.npy"
+kernel="../utils/average_11_stages1.npy"
 #kernel="../utils/average_11_stages2.npy"
 #kernel="../utils/average_11_stages3.npy"
 #kernel="../utils/low_pass_5hz.npy"
 #kernel="../utils/low_pass_10_fs100.npy"
-kernel="../utils/low_pass_6_fs100.npy"
+#kernel="../utils/low_pass_6_fs100.npy"
 #kernel="../utils/low_pass.npy"
 #kernel="../utils/hi_pass.npy"
 
@@ -61,6 +61,7 @@ convAxe         = fig.add_subplot(3,2,5)
 convolveData    = xData
 for i in range(convStages):
     convolveData    = np.convolve(convolveData,firData)
+    print(len(convolveData),len(firData))
 
 convolveNData = np.arange(0,len(convolveData),1)
 convolveTData = convolveNData/fs

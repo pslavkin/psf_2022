@@ -11,7 +11,7 @@ signalFrec1 = 2
 signalFrec2 = 10
 
 #kernel="../utils/hi_pass_short.npy"
-#kernel="../utils/average_11_stages1.npy"
+kernel="../utils/average_11_stages1.npy"
 #kernel="../utils/average_11_stages2.npy"
 #kernel="../utils/average_11_stages3.npy"
 #kernel="../utils/low_pass_5hz_fs100.npy"
