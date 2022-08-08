@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 #--------------------------------------
 fig        = plt.figure()
-fig.suptitle('Ventanas para mejorar el efecto Gibbs', fontsize=16)
 N          = 40
+fig.suptitle('Ventanas para mejorar el efecto Gibbs N: {}'.format(N), fontsize=16)
 #--------------------------------------
 nData      = np.arange(0,N,1) #arranco con numeros enteros para evitar errores de float
 

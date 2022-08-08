@@ -3,14 +3,15 @@
 #include "arm_const_structs.h"
 //#include "fir_500.h" 
 //#include "fir_clase6.h" //126
-#include "stop_band_700.h"
+#include "fir_bandpass.h" //199
+//#include "stop_band_700.h"
 
 //N? / 126+N-1=256
 //
 
 #define BITS    10   // cantidad de bits usado para cuantizar
 
-#define CUTFREC 700 // frec de corte para filtrar en frec
+#define CUTFREC 3000 // frec de corte para filtrar en frec
 
 struct header_struct {
    char     pre[8];
@@ -22,7 +23,7 @@ struct header_struct {
    char     pos[4];
 } __attribute__ ((packed)); //importante para que no paddee
 
-struct header_struct header={"*header*",0,118,10000,CUTFREC,h_LENGTH,"end*"};
+struct header_struct header={"*header*",0,199,10000,CUTFREC,h_LENGTH,"end*"};
 
 void trigger(int16_t threshold)/*{{{*/
 {

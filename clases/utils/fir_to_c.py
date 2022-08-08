@@ -3,13 +3,15 @@ import matplotlib.pyplot as plt
 import scipy.signal as sc
 #--------------------------------------
 fig        = plt.figure()
+fig.suptitle('Conversion desde pyfdax a include files en C', fontsize=16)
 fs         = 10000
-N          = 118 #este se calcula como el largo de la FFT elegida MENOS M+1
+N          = 199 #este se calcula como el largo de la FFT elegida MENOS M+1
 
 #filterFile="low_pass.npy"
 #filterFile="./filtro_band_stop_700.npy"
 #filterFile="./pasa_bajos_500_clase6.npy"
-filterFile="band_pass_65_400.npy"
+filterFile="./band_pass_3k_fs10000.npy"
+#filterFile="band_pass_65_400.npy"
 #filterFile="pasabajo_300.npy"
 #filterFile="low_pass_600.npy"
 #filterFile="low_pass_1500.npy"
@@ -28,6 +30,7 @@ tData=nData/fs
 fData=nData*(fs/(N+M-1))-fs/2
 #--------------------------------------
 firAxe  = fig.add_subplot(2,1,1)
+firAxe.set_title('h (respuesta al impulso unitaria extendida con zeros N: {})'.format(len(tData)), fontsize=16)
 firLn,  = plt.plot(tData,firExtendedData,'b-o',label="h")
 firAxe.legend()
 firAxe.grid(True)
@@ -37,6 +40,7 @@ firAxe.set_ylim(np.min(firData),np.max(firData))
 HData         = np.fft.fft(firExtendedData)
 circularHData = np.abs(np.fft.fftshift(HData/M))**2
 HAxe          = fig.add_subplot(2,1,2)
+HAxe.set_title('H (DFT de la respuesta al impulso N: {})'.format(len(fData)), fontsize=16)
 HLn,          = plt.plot(fData,circularHData,'r-o',label = "H")
 HAxe.legend()
 HAxe.grid(True)

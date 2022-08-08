@@ -8,7 +8,7 @@ fig.suptitle('Overlap and add en f', fontsize=16)
 fs              = 20
 N               = 80
 signalFrec      = 0.4
-firData,        = np.load("utils/low_pass.npy").astype(float)
+firData,        = np.load("../utils/low_pass.npy").astype(float)
 firData         = np.insert(firData,0,firData[-1])
 M               = len(firData)
 firExtendedData = np.concatenate((firData,np.zeros(N-1)))
@@ -17,14 +17,14 @@ impar           = ((N+M-1)%2)
 def x(f,n):
     return np.sin(2*np.pi*f*n)+np.sin(2*np.pi*5*n)
 
+#cantidad de segmentos
 k=10
 
 tData=np.linspace(0,(k*N+M-1)/fs,k*N+M-1,endpoint=False)
 xData=x(signalFrec,tData[:k*N])
-segment=0
 #--------------------------------------
 signalAxe  = fig.add_subplot(4,1,1)
-signalLn,  = plt.plot(tData[:k*N],xData,'b-o',label="signal",linewidth=2,alpha=0.3)
+signalLn,  = plt.plot(tData[:k*N],xData,'b-o',label="signal original",linewidth=2,alpha=0.3)
 signalAxe.legend()
 signalAxe.grid(True)
 signalAxe.set_xlim(0,(k*N-1)/fs)
@@ -42,7 +42,7 @@ fftData=np.fft.fft(xData)
 circularfftData=np.fft.fftshift(fftData)
 
 segmentFftAxe  = fig.add_subplot(4,2,3)
-segmentFftLn,  = plt.plot([],[],'r-o',label="segment FFT",linewidth=2,alpha=0.3)
+segmentFftLn,  = plt.plot([],[],'r-o',label="FFT de un segmento (len: {})".format(len(fData)),linewidth=2,alpha=0.3)
 segmentFftAxe.legend()
 segmentFftAxe.grid(True)
 segmentFftAxe.set_xlim(-fs/2,fs/2)
@@ -51,7 +51,7 @@ segmentFftAxe.set_ylim(np.min(np.abs(fftData)),50)#np.max(fftData))
 HData=np.fft.fft(firExtendedData)
 circularHData=np.fft.fftshift(HData)
 HAxe  = fig.add_subplot(4,2,5)
-HLn,  = plt.plot(fData,np.abs(circularHData),'r-o',label="H",linewidth=10,alpha=0.4)
+HLn,  = plt.plot(fData,np.abs(circularHData),'r-o',label="H (len: {})".format(len(fData)),linewidth=10,alpha=0.4)
 HAxe.legend()
 HAxe.grid(True)
 HAxe.set_xlim(-fs/2,fs/2)
@@ -60,14 +60,14 @@ HAxe.set_ylim(np.min(np.abs(HData)),np.max(np.abs(HData)))
 
 
 YAxe  = fig.add_subplot(4,2,4)
-YLn,  = plt.plot([],[],'b-o',label="segment Y",linewidth=5,alpha=0.4)
+YLn,  = plt.plot([],[],'b-o',label="Y (Segmento filtrado con H, len: {})".format(N+M-1),linewidth=5,alpha=0.4)
 YAxe.legend()
 YAxe.grid(True)
 YAxe.set_xlim(-fs/2,fs/2)
 YAxe.set_ylim(np.min(np.abs(fftData)),50)#np.max(fftData))
 
 ifftAxe  = fig.add_subplot(4,2,6)
-ifftLn,  = plt.plot([],[],'b-o',label="segment ifft",linewidth=5,alpha=0.4)
+ifftLn,  = plt.plot([],[],'b-o',label="y (Antitransformada de Y, len:{})".format(N+M-1),linewidth=5,alpha=0.4)
 ifftAxe.legend()
 ifftAxe.grid(True)
 ifftAxe.set_xlim(0,(N+M-1)/fs)
@@ -75,8 +75,8 @@ ifftAxe.set_ylim(np.min(xData),np.max(xData))
 
 convAxe         = fig.add_subplot(4,1,4)
 convolveData    = np.convolve(xData,firData)
-convLn,         = plt.plot(tData,convolveData,'r-',label = "conv",linewidth=12,alpha=0.3)
-realtimeConvLn, = plt.plot([],[],'b-o',label="realtimeConv",linewidth=2,alpha=0.8)
+convLn,         = plt.plot(tData,convolveData,'r-',label = "Convolucion completa (len: {})".format(len(tData)),linewidth=12,alpha=0.3)
+realtimeConvLn, = plt.plot([],[],'b-o',label="Convolucion segmento a segmento (len: {})".format(len(tData)),linewidth=2,alpha=0.8)
 convAxe.legend()
 convAxe.grid(True)
 convAxe.set_xlim(0,(k*N+M-2)/fs)
@@ -88,10 +88,10 @@ def init():
     return YLn,realtimeConvLn,convSignalZoneLn,segmentFftLn,ifftLn
 
 
-def update(i):
-    global yData,b,realtimeConv,segment
-    segment=i
+def update(segment):
+    global yData,b,realtimeConv
 
+    #segment data mide N+M-1 pero se cargan solo N datos, con lo cual el resto es relleno de zero
     segmentData[:N]=x(signalFrec,tData[segment*N:(segment+1)*N])
 
     segmentFftData=np.fft.fft(segmentData)
@@ -105,6 +105,7 @@ def update(i):
     ifftData=np.fft.ifft(YData)
     ifftLn.set_data(tSegmentData,np.real(ifftData))
 
+    print(len(ifftData),N+M-1)
     realtimeConv[segment*N:segment*N+N+M-1]+=np.real(ifftData)
     realtimeConvLn.set_data(tData,realtimeConv)
 

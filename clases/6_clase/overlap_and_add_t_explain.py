@@ -8,7 +8,7 @@ fig.suptitle('Overlap and add en t', fontsize=16)
 fs          = 100
 signalFrec1 = 2
 signalFrec2 = 10
-NN          = 4
+NN          = 10
 N           = 2 #numero de puntos en cada segmento. NN se estira un poco si no son multiplos
 #NN          = 2000
 #N           = 191 #numero de puntos en cada segmento. NN se estira un poco si no son multiplos
@@ -21,7 +21,7 @@ residue=N*segments-NN
 
 #firData,    = np.load("../utils/average_11_stages1.npy").astype(float)
 #firData, = np.load("../utils/low_pass_5hz.npy").astype(float)
-firData = [1,2]
+firData = [1,2,1]
 
 M                    = len(firData)
 NN                   = NN+residue
@@ -29,7 +29,7 @@ nData                = np.arange(0,NN+M-1,1)
 nSegmentDataNegative = np.arange(-(M-1),NN+M-1,1)
 #--------------------------------------
 def x(n):
-    return [1,2,3,4]
+    return [1,2,0,4,2,3,1,2,0,5]
     return np.sin(2*np.pi*signalFrec1*n)+np.sin(2*np.pi*signalFrec2*n)
 
 #--------------------------------------
@@ -48,7 +48,7 @@ tSegmentDataNegative = nSegmentDataNegative/fs
 segmentData          = np.zeros(N+M-1)
 #
 actualSegment=0
-segmentAxe  = fig.add_subplot(4,1,4)
+segmentAxe  = fig.add_subplot(4,1,3)
 segmentLn,  = plt.plot([],[],'b-o',label="segment")
 segmentAxe.legend()
 segmentAxe.grid(True)
@@ -56,14 +56,14 @@ segmentAxe.set_xlim(-1/fs,(N+M-2)/fs)
 segmentAxe.set_ylim(np.min(xData)-0.2,np.max(xData)+0.2)
 segmentSignalZoneLn = segmentAxe.fill_between([0,0],10,-10,facecolor="yellow",alpha=0.5)
 ##
-firAxe  = fig.add_subplot(4,1,3)
+firAxe  = fig.add_subplot(4,1,2)
 firLn,  = plt.plot([],[],'b-o',label="fir kernel")
 firAxe.legend()
 firAxe.grid(True)
 firAxe.set_xlim(-1/fs,(N+M-2)/fs)
 firAxe.set_ylim(np.min(firData)-0.2,np.max(firData)+0.2)
 ##
-convAxe         = fig.add_subplot(4,1,2)
+convAxe         = fig.add_subplot(4,1,4)
 convolveData    = np.convolve(xData[:NN],firData)
 convLn,         = plt.plot(tData,convolveData,'b-',label = "conv",linewidth=12,alpha=0.3)
 realtimeConvLn, = plt.plot([],[],'r-o',label='segment conv',linewidth=2,alpha=0.8)
@@ -102,6 +102,6 @@ def update(i):
     input()
     return firLn,realtimeConvLn,convSegmentZoneLn,convSignalZoneLn,segmentLn,segmentSignalZoneLn
 #
-ani=FuncAnimation(fig,update,N+M-1,init,interval=10 ,blit=True,repeat=True)
+ani=FuncAnimation(fig,update,N+M-1,init,interval=10 ,blit=False,repeat=True)
 plt.get_current_fig_manager().window.showMaximized()
 plt.show()

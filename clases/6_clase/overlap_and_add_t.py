@@ -18,7 +18,7 @@ residue=N*segments-NN
 
 
 #firData,    = np.load("../utils/average_11_stages1.npy").astype(float)
-firData, = np.load("utils/low_pass_5hz.npy").astype(float)
+firData, = np.load("../utils/low_pass_5hz.npy").astype(float)
 
 M                    = len(firData)
 NN                   = NN+residue

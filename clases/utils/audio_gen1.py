@@ -5,12 +5,13 @@ import simpleaudio as sa
 
 f    = 500
 fs   = 44100
-sec  = 20
-B    = 4000
+sec  = 5
+B    = 2000
+startF = 2000
 t    = np.arange(0,sec,1/fs)
 z    = np.zeros(len(t))
 
-note = (2**15-1)*np.sin(2 * np.pi * B/2*(t/sec) *t)  #sweept
+note = (2**15-1)*np.sin(2 * np.pi * (B/2*(t/sec) +startF) *t)  #sweept
 
 #steps=10
 #note=np.array([])
