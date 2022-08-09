@@ -8,7 +8,7 @@ fs          = 100
 N           = 100
 signalFrec1 = 2
 signalFrec2 = 10
-convStages  = 2
+convStages  = 5
 fig.suptitle('Filtrado FIR np.convolve multiples etapas: {}'.format(convStages), fontsize=16)
 
 #kernel="../utils/hi_pass_short.npy"

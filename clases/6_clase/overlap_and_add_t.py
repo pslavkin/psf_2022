@@ -9,7 +9,7 @@ fs          = 100
 signalFrec1 = 2
 signalFrec2 = 10
 NN          = 2000
-N           = 191 #numero de puntos en cada segmento. NN se estira un poco si no son multiplos
+N           = 206 #numero de puntos en cada segmento. NN se estira un poco si no son multiplos
 segments    = NN//N
 residue     = NN-N*segments
 if(residue>0):

@@ -27,9 +27,9 @@ spectreAxe.grid(True)
 spectreAxe.legend()
 #----------BLACKMAN----------------------------
 
-winData=np.blackman(M)
+#winData=np.blackman(M)
 #winData=np.hamming(M) 
-#winData=sc.gaussian(M,20)
+winData=sc.gaussian(M,20)
 
 winAxe       = fig.add_subplot(3,1,3)
 winAxe.set_title("Window con M: {}".format(M),rotation=0,fontsize=10,va="center")
@@ -45,7 +45,7 @@ ifftDataShifted= ifftDataShifted[N//2-M//2:N//2+M//2]
 #------aplico ventaneo ----------------------
 ifftDataShiftedW=ifftDataShifted*winData
 #descomentar la siguiente linea para aplicar la ventana
-#ifftDataShifted=ifftDataShiftedW
+ifftDataShifted=ifftDataShiftedW
 
 ifftDataShiftedW = np.concatenate((ifftDataShiftedW,np.zeros(N-M)))
 ifftDataShifted = np.concatenate((ifftDataShifted,np.zeros(N-M)))

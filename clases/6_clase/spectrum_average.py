@@ -22,7 +22,7 @@ nData = np.arange(0,NN,1)
 #--------------------------------------
 def x(n):
     return 0.1*np.sin(2*np.pi*signalFrec1*n)+0.5*np.random.normal(0,size=len(n))
-    return np.sin(2*np.pi*signalFrec1*n)+np.sin(2*np.pi*signalFrec2*n)
+#    return np.sin(2*np.pi*signalFrec1*n)+np.sin(2*np.pi*signalFrec2*n)
 
 #--------------------------------------
 tData     = nData/fs

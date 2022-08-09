@@ -3,7 +3,8 @@
 #include "arm_const_structs.h"
 //#include "fir.h" 
 //#include "fir_clase6.h"
-#include "fir_bandpass.h"
+//#include "fir_bandpass.h"
+#include "fir_band_pass_2.h"
 
 #define BITS    10   // cantidad de bits usado para cuantizar
 
@@ -23,7 +24,7 @@ struct header_struct {
    char     pos[4];
 } __attribute__ ((packed)); //importante para que no paddee
 
-struct header_struct header={"*header*",0,199,10000,h_LENGTH,"end*"};
+struct header_struct header={"*header*",0,128,10000,h_LENGTH,"end*"};
 
 void trigger(int16_t threshold)/*{{{*/
 {
@@ -58,8 +59,8 @@ int main ( void ) {
          sample = 0;
 
 //------------CONVOLUCION------------------
-//   arm_conv_q15       ( adc,header.N,h,h_LENGTH,y);
-         arm_conv_fast_q15  ( adc,header.N,h,h_LENGTH,y); //126+74-1
+         arm_conv_q15       ( adc,header.N,h,h_LENGTH,y);
+//         arm_conv_fast_q15  ( adc,header.N,h,h_LENGTH,y); //126+74-1
 
 //------------ENVIO DE TRAMA------------------
          header.id++;

@@ -7,7 +7,7 @@ fig        = plt.figure()
 fig.suptitle('Efecto Gibbs al recortar la sinc', fontsize=16)
 fs         = 100
 N          = 1000
-M          = 500
+M          = 90
 cutFrec    = 5
 #--------------------------------------
 nData      = np.arange(0,N,1) #arranco con numeros enteros para evitar errores de float
