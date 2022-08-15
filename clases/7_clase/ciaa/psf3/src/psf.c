@@ -4,8 +4,8 @@
 //##include "fir_500.h" 
 #include "fir_65_400_10000.h" 
 
-#define INTERPOL_WIDTH 20
-#define FFT_LENGTH     512
+#define INTERPOL_WIDTH 5 //ojo que no puede ser muy grande porque no se consideraron los bordes
+#define FFT_LENGTH     256
 #define OVERSAMPLE     10 //ojo que tiene que conincidir con el disenio del filtro
 
 struct header_struct {
@@ -63,17 +63,17 @@ int main ( void ) {
       sample++;
       if ( sample>=(header.N*OVERSAMPLE) ) {
 //---------------escalado automatico--------------------------
-         noAgc(adc,header.N*OVERSAMPLE);
-//         agc(adc,header.N*OVERSAMPLE);
+//         noAgc(adc,header.N*OVERSAMPLE);
+         agc(adc,header.N*OVERSAMPLE);
 
-//---------------filtrado antialias en digitial--------------------------
-         //arm_conv_fast_q15  ( adc,header.N*OVERSAMPLE,h,h_LENGTH,fft); //se podria reutilizar el adc en vez de y como salida
-         arm_conv_q15  ( adc,header.N*OVERSAMPLE,h,h_LENGTH,fft); //se podria reutilizar el adc en vez de y como salida
+////---------------filtrado antialias en digitial--------------------------
+         arm_conv_fast_q15  ( adc,header.N*OVERSAMPLE,h,h_LENGTH,fft); //se podria reutilizar el adc en vez de y como salida
+//         arm_conv_q15  ( adc,header.N*OVERSAMPLE,h,h_LENGTH,fft); //se podria reutilizar el adc en vez de y como salida
 
-//---------------escalado automatico a posteriori del filtrado--------------------------
-//         agc(fft,header.N*OVERSAMPLE+h_LENGTH-1);
-
-//---------------downsampling--------------------------
+////---------------escalado automatico a posteriori del filtrado--------------------------
+         agc(fft,header.N*OVERSAMPLE+h_LENGTH-1);
+//
+////---------------downsampling--------------------------
          for(int i=0;i<header.N;i++){
             x[i]       = fft[i*OVERSAMPLE+(h_LENGTH-1)/2];//arranca desde la zona valida
          }
@@ -84,51 +84,51 @@ int main ( void ) {
                                   //salga de q15
             fft[2*i+1] = 0;
          }
-//---------------zero padding--------------------------
+////---------------zero padding--------------------------
          for(;i<FFT_LENGTH;i++){
             fft[2*i+0] = 0;
             fft[2*i+1] = 0;
          }
 
-//------------TRANSFORMADA------------------
+////------------TRANSFORMADA------------------
          init_cfft_instance ( &CS,FFT_LENGTH);
          arm_cfft_q15       ( &CS ,fft ,0 ,1 );
 
-//------------MAGNITUD------------------
+////------------MAGNITUD------------------
          arm_cmplx_mag_squared_q15 ( fft ,fftAbs ,FFT_LENGTH);
-
-//------------Promedio de 2 espectros------------------
+//
+////------------Promedio de 2 espectros------------------
          for(int i=0;i<FFT_LENGTH;i++){
             fftAbsProm[i] = fftAbsProm[i]/2 + fftAbs[i]/2;
          }
-//------------opcional SIN Promedio (queda mas fluido)------------------
-//         for(int i=0;i<FFT_LENGTH;i++){
-//            fftAbsProm[i] = fftAbs[i];
-//         }
-//            
-//------------BUSCO EL MAXIMO------------------
+////------------opcional SIN Promedio (queda mas fluido)------------------
+////         for(int i=0;i<FFT_LENGTH;i++){
+////            fftAbsProm[i] = fftAbs[i];
+////         }
+////            
+////------------BUSCO EL MAXIMO------------------
          arm_max_q15 ( fftAbsProm ,FFT_LENGTH ,&header.maxValue ,&header.maxIndex );
-         header.maxValue*=24*FFT_LENGTH/header.N;//>>=2;//<<=3;
-//------------Centro de masas------------------
+         header.maxValue*=8*FFT_LENGTH/header.N;//>>=2;//<<=3;
+////------------Centro de masas------------------
       interpol(fftAbsProm,&header.maxIndex); //TODO ojo! aca el max index sale x1000
-
-
-//------------Downsample ABS (uso internamente FFT_LENGTH pero muestro solo N------------------
+//
+//
+////------------Downsample ABS (uso internamente FFT_LENGTH pero muestro solo N------------------
          int down=FFT_LENGTH/header.N;
          for(int i=0;i<header.N;i++) {
             int sum=0;
             for(int j=0;j<down;j++)
                sum+=fftAbsProm[i*down+j];
-            fftAbs[i] = sum*24*FFT_LENGTH/(header.N*down);
+            fftAbs[i] = sum*8*FFT_LENGTH/(header.N*down);
          }
 
 
-//------------BUSCO CUERDA------------------
+////------------BUSCO CUERDA------------------
          findChord(header.maxIndex,&chord,&tune);
-
-//------------ENCIENDO LEDS------------------
+//
+////------------ENCIENDO LEDS------------------
          ledManagement(chord,tune );
-
+//
          uartWriteByteArray ( UART_USB ,(uint8_t*)&header ,sizeof(struct header_struct ));
          header.id++;
          sample     = 0;
@@ -136,7 +136,7 @@ int main ( void ) {
          adcRead(CH1); //why?? hay algun efecto minimo en el 1er sample.. puede ser por el blinkeo de los leds o algo que me corre 10 puntos el primer sample. Con esto se resuelve.. habria que investigar el problema en detalle
       }
       //---------------over sampling--------------------------
-      while(cyclesCounterRead()< EDU_CIAA_NXP_CLOCK_SPEED/(header.fs*OVERSAMPLE)) // el clk de la CIAA es 204000000
+      while(cyclesCounterRead()< (EDU_CIAA_NXP_CLOCK_SPEED/(header.fs*OVERSAMPLE))) // el clk de la CIAA es 204000000
          ;
    }
 }
