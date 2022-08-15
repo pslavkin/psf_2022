@@ -3,6 +3,8 @@
 #include "arm_const_structs.h"
 #include "fir_65_400_10000.h" 
 
+#define BITS    10   // cantidad de bits usado para cuantizar
+                     //
 struct header_struct {
    char     pre[8];
    uint32_t id;
@@ -60,7 +62,9 @@ int main ( void ) {
          agc(adc,header.N*overSample);
 
          //---------------filtrado antialias en digitial--------------------------
-         arm_conv_fast_q15  ( adc,header.N*overSample,h,h_LENGTH,y);
+         //TODO ojo con la conv_fast y los largos de N que deberian ser potencia de 2
+         //arm_conv_fast_q15  ( adc,header.N*overSample,h,h_LENGTH,y);
+         arm_conv_q15  ( adc,header.N*overSample,h,h_LENGTH,y);
 
          //---------------downsampling--------------------------
          for(int i=0;i<header.N;i++){

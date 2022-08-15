@@ -6,7 +6,7 @@ import os
 import io
 import serial
 
-STREAM_FILE=("/dev/ttyUSB2","serial")
+STREAM_FILE=("/dev/ttyUSB3","serial")
 #STREAM_FILE=("log.bin","file")
 
 header = { "pre": b"*header*", "id": 0, "N": 100, "fs": 1000, "pos":b"end*" }
@@ -15,7 +15,7 @@ fig.suptitle('Antialias digital + downsampling con CIAA', fontsize=16)
 
 #--------------------------ADC--------------------------
 adcAxe = fig.add_subplot ( 2,1,1                  )
-adcLn, = plt.plot        ( [],[],'r-o',linewidth=12, alpha = 0.3 ,label  = "adc")
+adcLn, = plt.plot        ( [],[],'r-o',linewidth=8, alpha = 0.3 ,label  = "adc")
 adcAxe.grid              ( True                   )
 adcAxe.set_ylim ( -1.5 ,1.5          )
 adcAxe.set_xlim ( 0    ,(header["N"] ))
@@ -23,7 +23,7 @@ adcAxe.set_xlim ( 0    ,(header["N"] ))
 #----------------------ciaaFFT vs fft(adc)--------------------------
 fftAxe        = fig.add_subplot ( 2,1,2 )
 fftAxe.set_title("fft(ciaaFFT) vs fft(adc)",rotation = 0,fontsize = 10,va = "center")
-fftLn,     = plt.plot ( [] ,[] ,'r-o' ,linewidth = 10  ,alpha = 0.3 ,label = "abs(FFT(adc))" )
+fftLn,     = plt.plot ( [] ,[] ,'b-o' ,linewidth = 8  ,alpha = 0.3 ,label = "abs(FFT(adc))" )
 #ciaaFftLn, = plt.plot ( [] ,[] ,'b-o' ,linewidth = 3 ,alpha = 0.8 ,label = "ciaaFFT filtered out" )
 fftLg      = fftAxe.legend()
 fftAxe.set_ylim ( 0,0.03 )#np.max(absFft))

@@ -1,10 +1,11 @@
 #include "sapi.h"
 #include "arm_math.h"
 #include "arm_const_structs.h"
+//##include "fir_500.h" 
 #include "fir_65_400_10000.h" 
 
-#define INTERPOL_WIDTH 200
-#define FFT_LENGTH     4096
+#define INTERPOL_WIDTH 20
+#define FFT_LENGTH     512
 #define OVERSAMPLE     10 //ojo que tiene que conincidir con el disenio del filtro
 
 struct header_struct {
@@ -20,7 +21,7 @@ struct header_struct {
 int16_t chord,tune;
 float chordsF[]={329.63, 246.94, 196.00, 146.83, 110.00, 82.41};
 
-struct header_struct header={"*header*",0,512,1000,0,0,"end*"};
+struct header_struct header={"*header*",0,128,1000,0,0,"end*"};
 void ledManagement      ( uint16_t chord            ,uint16_t tune                   );
 void init_cfft_instance ( arm_cfft_instance_q15* CS ,int length                      );
 void noAgc              ( int16_t* adc              ,uint16_t len                    );
@@ -62,23 +63,25 @@ int main ( void ) {
       sample++;
       if ( sample>=(header.N*OVERSAMPLE) ) {
 //---------------escalado automatico--------------------------
-         //noAgc(adc,header.N*OVERSAMPLE);
-         agc(adc,header.N*OVERSAMPLE);
+         noAgc(adc,header.N*OVERSAMPLE);
+//         agc(adc,header.N*OVERSAMPLE);
 
 //---------------filtrado antialias en digitial--------------------------
-         arm_conv_fast_q15  ( adc,header.N*OVERSAMPLE,h,h_LENGTH,fft); //se podria reutilizar el adc en vez de y como salida
+         //arm_conv_fast_q15  ( adc,header.N*OVERSAMPLE,h,h_LENGTH,fft); //se podria reutilizar el adc en vez de y como salida
+         arm_conv_q15  ( adc,header.N*OVERSAMPLE,h,h_LENGTH,fft); //se podria reutilizar el adc en vez de y como salida
 
 //---------------escalado automatico a posteriori del filtrado--------------------------
-         agc(fft,header.N*OVERSAMPLE+h_LENGTH-1);
+//         agc(fft,header.N*OVERSAMPLE+h_LENGTH-1);
 
 //---------------downsampling--------------------------
          for(int i=0;i<header.N;i++){
             x[i]       = fft[i*OVERSAMPLE+(h_LENGTH-1)/2];//arranca desde la zona valida
          }
-//---------------prpearo vector para hacer fft--------------------------
+//---------------preparo vector para hacer fft--------------------------
          int i;
          for(i=0;i<header.N;i++){
-            fft[2*i+0] = x[i];
+            fft[2*i+0] = x[i]; //antes de calcular divido por dos para que no
+                                  //salga de q15
             fft[2*i+1] = 0;
          }
 //---------------zero padding--------------------------
@@ -95,27 +98,30 @@ int main ( void ) {
          arm_cmplx_mag_squared_q15 ( fft ,fftAbs ,FFT_LENGTH);
 
 //------------Promedio de 2 espectros------------------
-//         for(int i=0;i<FFT_LENGTH;i++){
-//            fftAbsProm[i] = fftAbsProm[i]/2 + fftAbs[i]/2;
-//         }
-//------------opcional SIN Promedio (queda mas fluido)------------------
          for(int i=0;i<FFT_LENGTH;i++){
-            fftAbsProm[i] = fftAbs[i];
+            fftAbsProm[i] = fftAbsProm[i]/2 + fftAbs[i]/2;
          }
-            
-
+//------------opcional SIN Promedio (queda mas fluido)------------------
+//         for(int i=0;i<FFT_LENGTH;i++){
+//            fftAbsProm[i] = fftAbs[i];
+//         }
+//            
 //------------BUSCO EL MAXIMO------------------
          arm_max_q15 ( fftAbsProm ,FFT_LENGTH ,&header.maxValue ,&header.maxIndex );
-         header.maxValue<<=10;
-
+         header.maxValue*=24*FFT_LENGTH/header.N;//>>=2;//<<=3;
 //------------Centro de masas------------------
-         interpol(fftAbsProm,&header.maxIndex); //TODO ojo! aca el max index sale x1000
+      interpol(fftAbsProm,&header.maxIndex); //TODO ojo! aca el max index sale x1000
+
 
 //------------Downsample ABS (uso internamente FFT_LENGTH pero muestro solo N------------------
          int down=FFT_LENGTH/header.N;
          for(int i=0;i<header.N;i++) {
-            fftAbs[i] = fftAbsProm[i*down]<<10;
+            int sum=0;
+            for(int j=0;j<down;j++)
+               sum+=fftAbsProm[i*down+j];
+            fftAbs[i] = sum*24*FFT_LENGTH/(header.N*down);
          }
+
 
 //------------BUSCO CUERDA------------------
          findChord(header.maxIndex,&chord,&tune);

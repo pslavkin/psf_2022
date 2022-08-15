@@ -6,10 +6,10 @@ import os
 import io
 import serial
 
-STREAM_FILE=("/dev/ttyUSB1","serial")
+STREAM_FILE=("/dev/ttyUSB3","serial")
 #STREAM_FILE=("log.bin","file")
 
-FFT_LENGTH=4096
+FFT_LENGTH=512
 CHORD_WIDTH=2
 CHORD_TUNE=0.4
 chordsFrecs=[82.41 ,110.00 ,146.83 ,196.00 ,246.94 ,329.63]
@@ -34,7 +34,7 @@ fftLn,     = plt.plot ( [] ,[] ,'r-o' ,linewidth = 10  ,alpha = 0.3 ,label = "ab
 ciaaFftLn, = plt.plot ( [] ,[] ,'b-o' ,linewidth = 3 ,alpha = 0.8 ,label = "ciaaFFT" )
 ciaaMaxLn, = plt.plot ( [] ,[] ,'k-o' ,linewidth = 3 ,alpha = 0.8 ,label = "maxLine")
 fftLg      = fftAxe.legend(loc='upper right',prop={'size': 10})
-fftAxe.set_ylim ( 0,0.8 )#np.max(absFft))
+#fftAxe.set_ylim ( 0,0.02 )#np.max(absFft))
 fftAxe.set_xlim ( 0,header["fs"]/2-header["fs"]/header["N"])
 fftAxe.grid     ( True   )
 cutFrecZoneLn   = fftAxe.fill_between([0,0],100,-100,facecolor = "yellow",alpha = 0.2)
@@ -62,8 +62,8 @@ def findHeader(f,h):
     h["id"]      = readInt4File(f,4)
     h["N" ]      = readInt4File(f)
     h["fs"]      = readInt4File(f)
-    h["maxValue"]  = (readInt4File(streamFile,sign = True)*1.65)/(2**4*512)
-    h["maxIndex"] = ((readInt4File(f,4)/1)*header["fs"])/(1000*FFT_LENGTH)
+    h["maxValue"]  = (readInt4File(streamFile,sign = True)*1.65)/(2**6*512)
+    h["maxIndex"] = (readInt4File(f,4)/(1000*FFT_LENGTH))*header["fs"]  #/FFT_LENGTH-header["fs"]/2#*header["fs"])/(1000*FFT_LENGTH)
     data=bytearray(b'1234')
     while data!=h["pos"]:
         data+=f.read(1)
@@ -89,7 +89,7 @@ def readSamples(adc,synth,N,trigger=False,th=0):
     i=0
     for t in range(N):
         sample  = (readInt4File(streamFile,sign = True)*1.65)/(2**6*512)
-        ciaaFFT = (readInt4File(streamFile,sign = True)*1.65)/(2**4*512)
+        ciaaFFT = (readInt4File(streamFile,sign = True)*1.65)/(2**6*512)
         state,nextI= {
                 "waitLow" : lambda sample,i: ("waitHigh",0) if sample<th else ("waitLow" ,0),
                 "waitHigh": lambda sample,i: ("sampling",0) if sample>th else ("waitHigh",0),
@@ -121,7 +121,7 @@ def update(t):
 
 
     #auto escala el eje y, pero no tan bajo
-    fftAxe.set_ylim ( 0,np.clip(np.max((maxValue,np.max(ciaaFFT))),0.01,10)+0.01)
+    fftAxe.set_ylim ( 0,0.1)#np.clip(np.max((maxValue,np.max(ciaaFFT))),0.01,10)+0.01)
     ciaaMaxLn.set_label("frec:{0:.2f}".format(maxIndex))
     fftLg  = fftAxe.legend(loc='upper right',prop={'size': 16})
 

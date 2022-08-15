@@ -8,7 +8,7 @@ fig.suptitle('Zona de datos validad luego de una convolucion', fontsize=16)
 def h():
 #    return np.random.normal(0,2,128)
 #    return np.array([0,1,2,3,4,5,4,3,2,1,0])
-    return np.load("utils/low_pass.npy").astype(float)[0]
+    return np.load("../utils/low_pass.npy").astype(float)[0]
 
 N     = 100
 fs    = 100

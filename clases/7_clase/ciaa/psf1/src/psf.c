@@ -44,11 +44,15 @@ int main ( void ) {
          gpioToggle ( LEDR );                         // este led blinkea a fs/N
 
          //---------------filtrado antialias en digitial--------------------------
-         arm_conv_fast_q15  ( adc,header.N*overSample,h,h_LENGTH,y);
+         //ojo que para fast creo que N debe ser potencia de 2
+         //arm_conv_fast_q15  ( adc,header.N*overSample,h,h_LENGTH,y);
+         arm_conv_q15  ( adc,header.N*overSample,h,h_LENGTH,y);
 
          //---------------downsampling--------------------------
          for(int i=0;i<header.N;i++){
-            adc[i]=y[i*overSample+garbageOffset];
+            //adc[i]=y[i*overSample+garbageOffset];
+            //notar que pasa si me quedo con la parte inicial de la conversion
+            adc[i]=y[i*overSample+0];
          }
 
          uartWriteByteArray ( UART_USB ,(uint8_t*)&header ,sizeof(struct header_struct ));
