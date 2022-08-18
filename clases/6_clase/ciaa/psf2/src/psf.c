@@ -1,13 +1,14 @@
 #include "sapi.h"
 #include "arm_math.h"
 #include "arm_const_structs.h"
+#include "fir.h" 
 //#include "fir_500.h" 
 //#include "fir_clase6.h" //126
-#include "fir_band_pass_2.h" //315
+//#include "fir_band_pass_2.h" //315
 //#include "fir_bandpass.h" //199
 //#include "stop_band_700.h"
 
-//N? / 315+N-1=512 => 198
+//N? / 126+N-1=256 => 387
 //
 
 #define BITS    10   // cantidad de bits usado para cuantizar
@@ -24,7 +25,7 @@ struct header_struct {
    char     pos[4];
 } __attribute__ ((packed)); //importante para que no paddee
 
-struct header_struct header={"*header*",0,198,10000,CUTFREC,h_LENGTH,"end*"};
+struct header_struct header={"*header*",0,1027,10000,CUTFREC,h_LENGTH,"end*"};
 
 void trigger(int16_t threshold)/*{{{*/
 {

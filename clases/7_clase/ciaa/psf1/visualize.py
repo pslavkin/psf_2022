@@ -72,6 +72,7 @@ def readSamples(adc,synth,N,trigger=False,th=0):
                 }[state](sample,i)
         adc[i]=sample
         i=nextI
+    print(adc)
 
 def update(t):
     global header

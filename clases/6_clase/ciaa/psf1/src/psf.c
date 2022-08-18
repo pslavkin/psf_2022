@@ -1,10 +1,10 @@
 #include "sapi.h"
 #include "arm_math.h"
 #include "arm_const_structs.h"
-//#include "fir.h" 
+#include "fir.h" 
 //#include "fir_clase6.h"
 //#include "fir_bandpass.h"
-#include "fir_band_pass_2.h"
+//#include "fir_band_pass_2.h"
 
 #define BITS    10   // cantidad de bits usado para cuantizar
 

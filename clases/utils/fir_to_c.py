@@ -5,15 +5,15 @@ import scipy.signal as sc
 fig        = plt.figure()
 fig.suptitle('Conversion desde pyfdax a include files en C', fontsize=16)
 fs         = 10000
-N          = 199 #este se calcula como el largo de la FFT elegida MENOS M+1
+N          = 1027 #este se calcula como el largo de la FFT elegida MENOS M+1
 
 #filterFile="low_pass.npy"
 #filterFile="./filtro_band_stop_700.npy"
 #filterFile="./pasa_bajos_500_clase6.npy"
-filterFile="../utils/band_pass_2_5_fs_10000.npy"
+#filterFile="../utils/band_pass_2_5_fs_10000.npy"
 #filterFile="../utils/low_pass_2_fs10000.npy"
 #filterFile="./band_pass_3k_fs10000.npy"
-#filterFile="band_pass_65_400.npy"
+filterFile="band_pass_65_400.npy"
 #filterFile="pasabajo_300.npy"
 #filterFile="low_pass_600.npy"
 #filterFile="low_pass_1500.npy"

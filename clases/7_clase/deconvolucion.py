@@ -24,7 +24,7 @@ firExtendedData=np.fft.ifft(HData)
 firData=firExtendedData[:M]
 #--------------------------------------
 def x(n):
-    return np.sin(2*np.pi*10*n)+np.sin(2*np.pi*5*n)
+    #    return np.sin(2*np.pi*10*n)+np.sin(2*np.pi*5*n)
     out=np.zeros(N)
     for i in range(10):
         out[i]=i

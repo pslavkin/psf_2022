@@ -4,8 +4,8 @@
 //##include "fir_500.h" 
 #include "fir_65_400_10000.h" 
 
-#define INTERPOL_WIDTH 5 //ojo que no puede ser muy grande porque no se consideraron los bordes
-#define FFT_LENGTH     256
+#define INTERPOL_WIDTH 10 //ojo que no puede ser muy grande porque no se consideraron los bordes
+#define FFT_LENGTH     512
 #define OVERSAMPLE     10 //ojo que tiene que conincidir con el disenio del filtro
 
 struct header_struct {
@@ -102,14 +102,15 @@ int main ( void ) {
             fftAbsProm[i] = fftAbsProm[i]/2 + fftAbs[i]/2;
          }
 ////------------opcional SIN Promedio (queda mas fluido)------------------
-////         for(int i=0;i<FFT_LENGTH;i++){
-////            fftAbsProm[i] = fftAbs[i];
-////         }
-////            
+//         for(int i=0;i<FFT_LENGTH;i++){
+//            fftAbsProm[i] = fftAbs[i];
+//         }
+            
 ////------------BUSCO EL MAXIMO------------------
          arm_max_q15 ( fftAbsProm ,FFT_LENGTH ,&header.maxValue ,&header.maxIndex );
          header.maxValue*=8*FFT_LENGTH/header.N;//>>=2;//<<=3;
 ////------------Centro de masas------------------
+//      header.maxIndex*=1000;
       interpol(fftAbsProm,&header.maxIndex); //TODO ojo! aca el max index sale x1000
 //
 //

@@ -22,7 +22,7 @@ int max(int a, int b)
 
 int main ( void ) {
    uint16_t sample     = 0;
-   uint16_t overSample = 10;
+   uint16_t overSample = 1;
    int garbageOffset = (h_LENGTH+header.N*overSample-1)/2-(header.N*overSample)/2;
    int16_t adc   [ header.N*overSample            ];
    int16_t y     [ header.N*overSample+h_LENGTH-1 ];

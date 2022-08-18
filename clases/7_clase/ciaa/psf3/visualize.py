@@ -121,7 +121,7 @@ def update(t):
 
 
     #auto escala el eje y, pero no tan bajo
-    fftAxe.set_ylim ( 0,0.1)#np.clip(np.max((maxValue,np.max(ciaaFFT))),0.01,10)+0.01)
+    fftAxe.set_ylim ( 0,0.4)#np.clip(np.max((maxValue,np.max(ciaaFFT))),0.01,10)+0.01)
     ciaaMaxLn.set_label("frec:{0:.2f}".format(maxIndex))
     fftLg  = fftAxe.legend(loc='upper right',prop={'size': 16})
 
